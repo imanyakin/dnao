@@ -137,9 +137,9 @@ for i in [0,1]:
 	    solvent_refractive_index=model.n,
 	    min_radius = 1e-9,
 	    max_radius = 300e-9,
-	    radii_steps = 300,
-	    alpha = 0,
-	    time_truncation_limit=1e-3,
+	    radii_steps = 600,
+	    alpha = 0.1,
+	    time_truncation_limit=6e-4,
 	    debug=False
 	)
 
@@ -148,7 +148,7 @@ for i in [0,1]:
 
 
 	
-fig,axarr = plt.subplots(7,2,figsize=(3*7*2,2*4*2))
+fig,axarr = plt.subplots(7,2,figsize=(16*2,16*7))
 for i in [0,1]:
 
 	#count rate distribution
@@ -174,14 +174,14 @@ for i in [0,1]:
 	#individual IPSDs
 	for ipsd in analysis_struct[i]["ipsds"]:
 		axarr[3][i].plot(analysis_struct[i]["radii"],ipsd)
-	axarr[3][i].set_title("Individual IPSDs (T={}) [alpha:0.1,truncation_time:1e-3]".format(analysis_struct[i]["temperature"]))
+	axarr[3][i].set_title("Individual IPSDs (T={}) [alpha:0.1,truncation_time:6e-4]".format(analysis_struct[i]["temperature"]))
 	axarr[3][i].set_xlabel("Hydrodynamic radius [m]")
 	axarr[3][i].set_ylabel("IPSD")
 	
 
 	#averaged individual IPSD:
 	axarr[4][i].plot(analysis_struct[i]["radii"],analysis_struct[i]["averaged_ipsd"])
-	axarr[4][i].set_title("Averaged IPSD (T={})[alpha:0.1,truncation_time:1e-3]".format(analysis_struct[i]["temperature"]))
+	axarr[4][i].set_title("Averaged IPSD (T={})[alpha:0.1,truncation_time:6e-4]".format(analysis_struct[i]["temperature"]))
 	axarr[4][i].set_xlabel("Hydrodynamic radius [m]")
 	axarr[4][i].set_ylabel("IPSD")
 	
@@ -201,15 +201,15 @@ for i in [0,1]:
 	    solvent_viscosity=model.viscosity,
 	    solvent_refractive_index=model.n,	    min_radius = 1e-9,
 	    max_radius = 300e-9,
-	    radii_steps = 300,
+	    radii_steps = 600,
 	    alpha = 0.1,
-	    time_truncation_limit=1e-3,
+	    time_truncation_limit=6e-4,
 	    debug=False
 	)
 	ipsd =  contin_pipeline["ipsd"]
-	radii =  np.linspace(1e-9,300e-9,300)
+	radii =  np.linspace(1e-9,300e-9,600)
 	axarr[6][i].plot(radii,ipsd)
-	axarr[6][i].set_title("Averaged ACS IPSD (T={})[alpha:0.1,truncation_time:1e-3]".format(analysis_struct[i]["temperature"]))
+	axarr[6][i].set_title("Averaged ACS IPSD (T={})[alpha:0.1,truncation_time:6e-4]".format(analysis_struct[i]["temperature"]))
 	axarr[6][i].set_xlabel("Hydrodynamic radius [m]")
 	axarr[6][i].set_ylabel("IPSD")
 	
