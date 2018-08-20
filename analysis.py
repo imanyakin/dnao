@@ -155,6 +155,8 @@ for i in [0,1]:
 		temperature = 25.0
 	if i == 1:
 		temperature = 40.0
+
+
 	#count rate distribution
 	axarr[0][i].hist(analysis_struct[i]["count_rates"],bins=100)
 	axarr[0][i].set_title("Mean Count Rate (True, not derived), (T={0})".format(analysis_struct[i]["temperature"]))
@@ -162,7 +164,7 @@ for i in [0,1]:
 	axarr[0][i].set_ylabel("Occurenace frequency")
 
 	#histogram of intercepts
-	axarr[1][i].hist(analysis_struct[i]["intercepts"],bins=np.linspace(1.1,2.6,50))
+	axarr[1][i].hist(analysis_struct[i]["intercepts"],bins=np.linspace(1.1,1.7,50))
 	axarr[1][i].set_title("Intecepts (T={})".format(analysis_struct[i]["temperature"]))
 	axarr[1][i].set_xlabel("$g^{(2)}$(0)-1")
 	axarr[1][i].set_ylabel("Occurenace frequency")
