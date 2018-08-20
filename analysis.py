@@ -56,7 +56,7 @@ def analyse(run):
 		    max_radius = 300e-9,
 		    radii_steps = 300,
 		    alpha = 0.1,
-		    time_truncation_limit=6e-4,
+		    time_truncation_limit=1e-2,
 		    debug=False
 		)
 		ipsd = contin_pipeline["ipsd"]
@@ -128,6 +128,7 @@ for i in [0,1]:
 	print "acs.shape",acs.shape
 	print acs
 	
+	TRUNCATION_TIME = 6e-4
 	contin_pipeline = basic_contin_pipeline(g2_autocorrelation=np.asarray(acs),
 	    times=np.asarray(times),
 	    scattering_angle=model.theta,
@@ -139,21 +140,24 @@ for i in [0,1]:
 	    max_radius = 300e-9,
 	    radii_steps = 600,
 	    alpha = 0.1,
-	    time_truncation_limit=6e-4,
+	    time_truncation_limit=TRUNCATION_TIME,
 	    debug=False
 	)
-
+	analysis_struct[i]["temperature"] = model.T
 	analysis_struct[i]["averaged_acs_ipsd"] = contin_pipeline["ipsd"]
 	analysis_struct[i]["averaged_acs_ipsd_fit"] = contin_pipeline["acs_fit"]
 
 
 	
-fig,axarr = plt.subplots(7,2,figsize=(16*2,16*7))
+fig,axarr = plt.subplots(7,2,figsize=(8*2,8*7))
 for i in [0,1]:
-
+	if i == 0:
+		temperature = 25.0
+	if i == 1:
+		temperature = 40.0
 	#count rate distribution
 	axarr[0][i].hist(analysis_struct[i]["count_rates"],bins=100)
-	axarr[0][i].set_title("Mean Count Rate (True, not derived)")
+	axarr[0][i].set_title("Mean Count Rate (True, not derived), (T={0})".format(analysis_struct[i]["temperature"]))
 	axarr[0][i].set_xlabel("Count rate (kcps)")
 	axarr[0][i].set_ylabel("Occurenace frequency")
 
@@ -174,14 +178,14 @@ for i in [0,1]:
 	#individual IPSDs
 	for ipsd in analysis_struct[i]["ipsds"]:
 		axarr[3][i].plot(analysis_struct[i]["radii"],ipsd)
-	axarr[3][i].set_title("Individual IPSDs (T={}) [alpha:0.1,truncation_time:6e-4]".format(analysis_struct[i]["temperature"]))
+	axarr[3][i].set_title("Individual IPSDs (T={0}) [alpha:0.1,truncation_time:{1}]".format(analysis_struct[i]["temperature"],TRUNCATION_TIME))
 	axarr[3][i].set_xlabel("Hydrodynamic radius [m]")
 	axarr[3][i].set_ylabel("IPSD")
 	
 
 	#averaged individual IPSD:
 	axarr[4][i].plot(analysis_struct[i]["radii"],analysis_struct[i]["averaged_ipsd"])
-	axarr[4][i].set_title("Averaged IPSD (T={})[alpha:0.1,truncation_time:6e-4]".format(analysis_struct[i]["temperature"]))
+	axarr[4][i].set_title("Averaged IPSD (T={0})[alpha:0.1,truncation_time:{1}]".format(analysis_struct[i]["temperature"],TRUNCATION_TIME))
 	axarr[4][i].set_xlabel("Hydrodynamic radius [m]")
 	axarr[4][i].set_ylabel("IPSD")
 	
@@ -189,7 +193,7 @@ for i in [0,1]:
 
 	#averaged autocorrelation	
 	axarr[5][i].semilogx(analysis_struct[i]["times"],analysis_struct[i]["averaged_acs"])
-	axarr[5][i].set_title("Averaged ACS (T={})".format(analysis_struct[i]["temperature"]))
+	axarr[5][i].set_title("Averaged ACS (T={0})".format(analysis_struct[i]["temperature"]))
 	axarr[5][i].set_xlabel("Time [s]")
 	axarr[5][i].set_ylabel("$g^{(2)}(t)$")
 
@@ -203,13 +207,13 @@ for i in [0,1]:
 	    max_radius = 300e-9,
 	    radii_steps = 600,
 	    alpha = 0.1,
-	    time_truncation_limit=6e-4,
+	    time_truncation_limit=1e-2,
 	    debug=False
 	)
 	ipsd =  contin_pipeline["ipsd"]
 	radii =  np.linspace(1e-9,300e-9,600)
 	axarr[6][i].plot(radii,ipsd)
-	axarr[6][i].set_title("Averaged ACS IPSD (T={})[alpha:0.1,truncation_time:6e-4]".format(analysis_struct[i]["temperature"]))
+	axarr[6][i].set_title("Averaged ACS IPSD (T={0})[alpha:0.1,truncation_time:{1}]".format(analysis_struct[i]["temperature"],TRUNCATION_TIME))
 	axarr[6][i].set_xlabel("Hydrodynamic radius [m]")
 	axarr[6][i].set_ylabel("IPSD")
 	
